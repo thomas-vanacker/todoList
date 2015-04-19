@@ -45,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void onTodoItemFinished(View view){
+        //Ceci est un commentaire
         CheckBox checkBox = (CheckBox) view;
         if (checkBox.isChecked()) {
             int pos = lvItems.getPositionForView(view);
