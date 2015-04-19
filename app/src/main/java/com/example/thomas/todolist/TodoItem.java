@@ -62,9 +62,6 @@ public class TodoItem {
         map.put("title", this.title);
         map.put("comment", this.getComment());
         map.put("category", this.category);
-
         return map;
-
     }
-
 }
