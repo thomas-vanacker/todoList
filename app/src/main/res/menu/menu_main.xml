@@ -12,7 +12,7 @@
     <item android:id = "@+id/menu_goToList"
         android:title="@string/action_settings"
         android:icon="@drawable/ic_action_overflow"
-        app:showasAction="ifRoom"
+        app:showAsAction="ifRoom"
 
         />
 
