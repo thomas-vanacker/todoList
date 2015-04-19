@@ -58,7 +58,7 @@ public class TodoItem {
 
     public HashMap<String, Object> getHashMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("isDone", this.isDone);
+        map.put("IsDone", this.isDone);
         map.put("title", this.title);
         map.put("comment", this.getComment());
         map.put("category", this.category);

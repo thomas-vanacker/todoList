@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -16,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
 
 
@@ -34,20 +32,10 @@ public class MainActivity extends ActionBarActivity {
         readItems();
         itemsAdapter = new SimpleAdapter(this,
                 items, R.layout.mylayout,
-                new String[] {"isDone", "title", "comment", "category"},
+                new String[] {"IsDone", "title", "comment", "category"},
                 new int[]{R.id.isDone, R.id.todoTitle, R.id.category, R.id.comment});
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
-    }
-    private void onTodoItemFinished(View view){
-        CheckBox checkBox = (CheckBox) view;
-        if (checkBox.isChecked()) {
-            int pos = lvItems.getPositionForView(view);
-            items.remove(pos);
-            // Refresh the adapter
-            itemsAdapter.notifyDataSetChanged();
-            writeItems();
-        }
     }
     private void setupListViewListener() {
         lvItems.setOnItemLongClickListener(
@@ -66,16 +54,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onAddItem(View v) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("isDone", true);
-        map.put("title", etNewItem.getText());
-        map.put("comment", "");
-        map.put("category", "");
-        items.add(map);
-        itemsAdapter.notifyDataSetChanged();
-        etNewItem.setText("");
-        writeItems();
+        //EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
+        //String itemText = etNewItem.getText().toString();
+        //itemsAdapter.add(itemText);
+        //etNewItem.setText("");
+        //writeItems();
     }
 
 
@@ -86,29 +69,33 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.menu_addItem:
+                setContentView(R.layout.layout_add_item);
+                return true;
+            case R.id.menu_goToList:
+                setContentView(R.layout.activity_main);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
     private void readItems() {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
         try {
-            List<String> lineList = new ArrayList<>(FileUtils.readLines(todoFile));
+            ArrayList<String> lineList = new ArrayList<String>(FileUtils.readLines(todoFile));
             for (String line : lineList){
                 String[] parts = line.split("|");
                 HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("isDone", Boolean.parseBoolean(parts[0]));
+                map.put("IsDone", Boolean.parseBoolean(parts[0]));
                 map.put("title", parts[1]);
                 map.put("comment", parts[2]);
                 map.put("category", parts[3]);
@@ -126,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         try {
             for (HashMap<String, Object> item : items){
                 FileUtils.writeStringToFile(todoFile, String.format("%s|%s|%s|%s",
-                        item.get("isDone").toString(),
+                        item.get("IsDone").toString(),
                         item.get("title"),
                         item.get("comment"),
                         item.get("category")));
