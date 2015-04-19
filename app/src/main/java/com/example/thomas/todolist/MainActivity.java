@@ -79,8 +79,9 @@ public class MainActivity extends ActionBarActivity {
         map.put("comment", ((EditText) findViewById(R.id.newItemComment)).getText());
         map.put("category", ((EditText) findViewById(R.id.newItemCategory)).getText());
         items.add(map);
-        itemsAdapter.notifyDataSetChanged();
         writeItems();
+        // Retourne à la liste des items
+        displayTodoListView();
     }
 
 
