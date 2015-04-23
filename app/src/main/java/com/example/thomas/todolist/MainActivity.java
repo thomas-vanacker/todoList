@@ -1,29 +1,41 @@
 package com.example.thomas.todolist;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+    TextView mEdit;
     private ArrayList<HashMap<String, Object>> items;
     private SimpleAdapter itemsAdapter;
     private ListView lvItems;
+    private ArrayList<String> spinnerList = new ArrayList<>(Arrays.asList("Buenos Aires", "Córdoba", "La Plata"));
+
+    public void populateSetDate(int year, int month, int day) {
+        mEdit = (TextView) findViewById(R.id.date);
+        mEdit.setText(month + "/" + day + "/" + year);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +43,15 @@ public class MainActivity extends ActionBarActivity {
         displayTodoListView();
     }
 
+    public void selectDate(View view) {
+        DialogFragment newFragment = new SelectDateFragment();
+        newFragment.show(getSupportFragmentManager(), "DatePicker");
+    }
+
     private void displayTodoListView() {
         setContentView(R.layout.activity_main);
         lvItems = (ListView) findViewById(R.id.lvItems);
-        items = new ArrayList<HashMap<String, Object>>();
+        items = new ArrayList<>();
         readItems();
         itemsAdapter = new SimpleAdapter(this,
                 items, R.layout.mylayout,
@@ -72,8 +89,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onAddItem(View v) {
-        EditText etNewItem = (EditText) findViewById(R.id.newItemTitle);
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("isDone", true);
         map.put("title", ((EditText) findViewById(R.id.newItemTitle)).getText());
         map.put("comment", ((EditText) findViewById(R.id.newItemComment)).getText());
@@ -114,10 +130,10 @@ public class MainActivity extends ActionBarActivity {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
         try {
-            ArrayList<String> lineList = new ArrayList<String>(FileUtils.readLines(todoFile));
+            ArrayList<String> lineList = new ArrayList<>(FileUtils.readLines(todoFile));
             for (String line : lineList){
                 String[] parts = line.split("\\|");
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 if (parts.length == 4) {
                     map.put("isDone", Boolean.parseBoolean(parts[0]));
                     map.put("title", parts[1]);
@@ -127,7 +143,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         } catch (IOException e) {
-            items = new ArrayList<HashMap<String, Object>>();
+            items = new ArrayList<>();
         }
     }
 
@@ -136,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
         try {
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             for (HashMap<String, Object> item : items){
                 lines.add(String.format("%s|%s|%s|%s",
                         item.get("isDone").toString(),
