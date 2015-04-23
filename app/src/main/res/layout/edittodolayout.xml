@@ -93,5 +93,13 @@
         android:onClick="selectDate"
         android:text="Date" />
 
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newItemComment"
+        android:layout_toEndOf="@+id/periodicity"
+        android:layout_toRightOf="@+id/periodicity" />
+
 
 </RelativeLayout>

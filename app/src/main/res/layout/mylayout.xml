@@ -7,44 +7,45 @@
 
 
     <CheckBox
+        android:id="@+id/isDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/isDone"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:clickable="true"
-        android:descendantFocusability="beforeDescendants"/>
+        android:descendantFocusability="beforeDescendants"
+        android:onClick="onTodoItemFinished"
+        android:text="" />
 
     <TextView
+        android:id="@+id/todoTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/todoTitle"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/isDone"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/category"
-        android:layout_below="@+id/todoTitle"
-        android:layout_toRightOf="@+id/isDone"
-        android:layout_toEndOf="@+id/isDone" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/todoTitle"
+        android:layout_toEndOf="@+id/isDone"
+        android:layout_toRightOf="@+id/isDone"
         android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/comment"
-        android:layout_below="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/category"
-        android:layout_alignStart="@+id/category" />
+        android:layout_alignStart="@+id/category"
+        android:layout_below="@+id/category"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 </RelativeLayout>

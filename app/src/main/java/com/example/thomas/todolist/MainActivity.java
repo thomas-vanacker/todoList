@@ -7,10 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.commons.io.FileUtils;
@@ -18,7 +20,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<HashMap<String, Object>> items;
     private SimpleAdapter itemsAdapter;
     private ListView lvItems;
-    private ArrayList<String> spinnerList = new ArrayList<>(Arrays.asList("Buenos Aires", "Córdoba", "La Plata"));
+
 
     public void populateSetDate(int year, int month, int day) {
         mEdit = (TextView) findViewById(R.id.date);
@@ -41,6 +42,66 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         displayTodoListView();
+    }
+
+    private void spinnerCreationCategory() {
+        AdapterView.OnItemSelectedListener onSpinner =
+                new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(
+                            AdapterView<?> parent,
+                            View view,
+                            int position,
+                            long id) {
+                        EditText myEditText =
+                                (EditText) findViewById(R.id.newItemCategory);
+                        myEditText.setText(Integer.toString(position));
+                    }
+
+                    @Override
+                    public void onNothingSelected(
+                            AdapterView<?> parent) {
+                    }
+                };
+        String[] spinnerList = {"Canada", "Mexico", "USA"};
+        ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                spinnerList);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(stringArrayAdapter);
+        spinner.setOnItemSelectedListener(onSpinner);
+    }
+
+    private void spinnerCreationPeriodicity() {
+        AdapterView.OnItemSelectedListener onSpinner =
+                new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(
+                            AdapterView<?> parent,
+                            View view,
+                            int position,
+                            long id) {
+                        TextView myTextView =
+                                (TextView) findViewById(R.id.periodicity);
+                        myTextView.setText(Integer.toString(position));
+                    }
+
+                    @Override
+                    public void onNothingSelected(
+                            AdapterView<?> parent) {
+                    }
+                };
+        String[] spinnerList = {"Canada", "Mexico", "USA"};
+        ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                spinnerList);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(stringArrayAdapter);
+        spinner.setOnItemSelectedListener(onSpinner);
     }
 
     public void selectDate(View view) {
@@ -61,7 +122,7 @@ public class MainActivity extends ActionBarActivity {
         setupListViewListener();
     }
 
-    private void onTodoItemFinished(View view){
+    public void onTodoItemFinished(View view) {
         //Ceci est un commentaire
         CheckBox checkBox = (CheckBox) view;
         if (checkBox.isChecked()) {
@@ -86,6 +147,12 @@ public class MainActivity extends ActionBarActivity {
                         return true;
                     }
     });
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object listItem = lvItems.getItemAtPosition(position);
+            }
+        });
     }
 
     public void onAddItem(View v) {
@@ -118,6 +185,8 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()){
             case R.id.menu_addItem:
                 setContentView(R.layout.layout_add_item);
+                spinnerCreationCategory();
+                spinnerCreationPeriodicity();
                 return true;
             case R.id.menu_goToList:
                 displayTodoListView();
