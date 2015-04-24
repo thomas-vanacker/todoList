@@ -43,9 +43,20 @@
         android:id="@+id/comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/deadline"
+        android:layout_alignStart="@+id/deadline"
+        android:layout_below="@+id/deadline"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/category"
         android:layout_alignStart="@+id/category"
         android:layout_below="@+id/category"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>

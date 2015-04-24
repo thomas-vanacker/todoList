@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
 
     <EditText
-        android:id="@+id/newItemTitle"
+        android:id="@+id/editItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -17,7 +19,7 @@
         android:hint="Title" />
 
     <EditText
-        android:id="@+id/newItemCategory"
+        android:id="@+id/editItemCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/button"
@@ -28,7 +30,7 @@
         android:hint="Category" />
 
     <EditText
-        android:id="@+id/newItemComment"
+        android:id="@+id/editItemComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

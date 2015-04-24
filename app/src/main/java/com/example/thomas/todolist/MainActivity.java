@@ -29,11 +29,14 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<HashMap<String, Object>> items;
     private SimpleAdapter itemsAdapter;
     private ListView lvItems;
+    private int positionOnClick;
+    private ListView editLvItems;
 
 
     public void populateSetDate(int year, int month, int day) {
         mEdit = (TextView) findViewById(R.id.date);
-        mEdit.setText(month + "/" + day + "/" + year);
+        String machin = String.format("%02d/%02d/%04d", day, month, year);
+        mEdit.setText(machin);
     }
 
 
@@ -44,37 +47,8 @@ public class MainActivity extends ActionBarActivity {
         displayTodoListView();
     }
 
-    private void spinnerCreationCategory() {
-        AdapterView.OnItemSelectedListener onSpinner =
-                new AdapterView.OnItemSelectedListener() {
 
-                    @Override
-                    public void onItemSelected(
-                            AdapterView<?> parent,
-                            View view,
-                            int position,
-                            long id) {
-                        EditText myEditText =
-                                (EditText) findViewById(R.id.newItemCategory);
-                        myEditText.setText(Integer.toString(position));
-                    }
-
-                    @Override
-                    public void onNothingSelected(
-                            AdapterView<?> parent) {
-                    }
-                };
-        String[] spinnerList = {"Canada", "Mexico", "USA"};
-        ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                spinnerList);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(stringArrayAdapter);
-        spinner.setOnItemSelectedListener(onSpinner);
-    }
-
-    private void spinnerCreationPeriodicity() {
+    private void createSpinner(final String[] items, final int textBoxId, int spinnerId) {
         AdapterView.OnItemSelectedListener onSpinner =
                 new AdapterView.OnItemSelectedListener() {
 
@@ -85,8 +59,8 @@ public class MainActivity extends ActionBarActivity {
                             int position,
                             long id) {
                         TextView myTextView =
-                                (TextView) findViewById(R.id.periodicity);
-                        myTextView.setText(Integer.toString(position));
+                                (TextView) findViewById(textBoxId);
+                        myTextView.setText(items[position]);
                     }
 
                     @Override
@@ -94,12 +68,11 @@ public class MainActivity extends ActionBarActivity {
                             AdapterView<?> parent) {
                     }
                 };
-        String[] spinnerList = {"Canada", "Mexico", "USA"};
         ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
-                spinnerList);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                items);
+        Spinner spinner = (Spinner) findViewById(spinnerId);
         spinner.setAdapter(stringArrayAdapter);
         spinner.setOnItemSelectedListener(onSpinner);
     }
@@ -116,10 +89,14 @@ public class MainActivity extends ActionBarActivity {
         readItems();
         itemsAdapter = new SimpleAdapter(this,
                 items, R.layout.mylayout,
-                new String[] {"isDone", "title", "comment", "category"},
-                new int[]{R.id.isDone, R.id.todoTitle, R.id.category, R.id.comment});
+                new String[]{"isDone", "title", "comment", "category", "date"},
+                new int[]{R.id.isDone, R.id.todoTitle, R.id.category, R.id.comment, R.id.deadline});
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
+    }
+
+    private void displayEditTodoListView() {
+        setContentView(R.layout.edittodolayout);
     }
 
     public void onTodoItemFinished(View view) {
@@ -150,17 +127,21 @@ public class MainActivity extends ActionBarActivity {
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object listItem = lvItems.getItemAtPosition(position);
+                positionOnClick = position;
+                Object listItem = lvItems.getItemAtPosition(positionOnClick);
+
             }
         });
     }
 
     public void onAddItem(View v) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("isDone", true);
+        map.put("isDone", false);
         map.put("title", ((EditText) findViewById(R.id.newItemTitle)).getText());
         map.put("comment", ((EditText) findViewById(R.id.newItemComment)).getText());
         map.put("category", ((EditText) findViewById(R.id.newItemCategory)).getText());
+        map.put("date", ((TextView) findViewById(R.id.date)).getText());
+        map.put("periodicity", ((TextView) findViewById(R.id.periodicity)).getText());
         items.add(map);
         writeItems();
         // Retourne à la liste des items
@@ -185,8 +166,9 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()){
             case R.id.menu_addItem:
                 setContentView(R.layout.layout_add_item);
-                spinnerCreationCategory();
-                spinnerCreationPeriodicity();
+                String[] spinnerList = {"Canada", "Mexico", "USA"};
+                createSpinner(spinnerList, R.id.newItemCategory, R.id.spinnerCategory);
+                createSpinner(spinnerList, R.id.periodicity, R.id.spinnerPeriodicity);
                 return true;
             case R.id.menu_goToList:
                 displayTodoListView();
@@ -203,13 +185,18 @@ public class MainActivity extends ActionBarActivity {
             for (String line : lineList){
                 String[] parts = line.split("\\|");
                 HashMap<String, Object> map = new HashMap<>();
+                map.put("isDone", Boolean.parseBoolean(parts[0]));
+                map.put("title", parts[1]);
+                map.put("comment", parts[2]);
+                map.put("category", parts[3]);
                 if (parts.length == 4) {
-                    map.put("isDone", Boolean.parseBoolean(parts[0]));
-                    map.put("title", parts[1]);
-                    map.put("comment", parts[2]);
-                    map.put("category", parts[3]);
-                    items.add(map);
+                    map.put("date", "");
+                    map.put("periodicity", "");
+                } else {
+                    map.put("date", parts[4]);
+                    map.put("periodicity", parts[5]);
                 }
+                items.add(map);
             }
         } catch (IOException e) {
             items = new ArrayList<>();
@@ -223,11 +210,13 @@ public class MainActivity extends ActionBarActivity {
         try {
             List<String> lines = new ArrayList<>();
             for (HashMap<String, Object> item : items){
-                lines.add(String.format("%s|%s|%s|%s",
+                lines.add(String.format("%s|%s|%s|%s|%s|%s",
                         item.get("isDone").toString(),
                         item.get("title"),
                         item.get("comment"),
-                        item.get("category")));
+                        item.get("category"),
+                        item.get("date"),
+                        item.get("periodicity")));
             }
             FileUtils.writeLines(todoFile, lines);
         } catch (IOException e) {
