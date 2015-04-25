@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="false"
     tools:context=".MainActivity">
 
 
@@ -14,7 +15,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:clickable="true"
-        android:descendantFocusability="beforeDescendants"
+        android:focusable="false"
         android:onClick="onTodoItemFinished"
         android:text="" />
 

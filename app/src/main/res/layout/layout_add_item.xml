@@ -6,7 +6,7 @@
 
 
     <EditText
-        android:id="@+id/newItemTitle"
+        android:id="@+id/itemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -17,18 +17,18 @@
         android:hint="Title" />
 
     <EditText
-        android:id="@+id/newItemCategory"
+        android:id="@+id/itemCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/button"
+        android:layout_alignEnd="@+id/addButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/button"
-        android:layout_below="@+id/newItemTitle"
+        android:layout_alignRight="@+id/addButton"
+        android:layout_below="@+id/itemTitle"
         android:hint="Category" />
 
     <EditText
-        android:id="@+id/newItemComment"
+        android:id="@+id/itemComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -37,7 +37,7 @@
         android:hint="Comment" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -49,12 +49,12 @@
         android:id="@+id/spinnerCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/newItemTitle"
-        android:layout_toEndOf="@+id/newItemCategory"
-        android:layout_toRightOf="@+id/newItemCategory" />
+        android:layout_below="@+id/itemTitle"
+        android:layout_toEndOf="@+id/itemCategory"
+        android:layout_toRightOf="@+id/itemCategory" />
 
     <TextView
-        android:id="@+id/periodicity"
+        android:id="@+id/itemPeriodicity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -73,7 +73,7 @@
         android:layout_below="@+id/spinnerCategory" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/itemDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

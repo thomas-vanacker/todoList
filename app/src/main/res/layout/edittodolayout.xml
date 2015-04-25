@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
 
 
     <EditText
@@ -22,11 +21,11 @@
         android:id="@+id/editItemCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/button"
+        android:layout_alignEnd="@+id/editButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/button"
-        android:layout_below="@+id/newItemTitle"
+        android:layout_alignRight="@+id/editButton"
+        android:layout_below="@+id/editItemTitle"
         android:hint="Category" />
 
     <EditText
@@ -35,73 +34,94 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/chooseDate"
+        android:layout_below="@+id/chooseDateEdit"
         android:hint="Comment" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/editButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="onAddItem"
-        android:text="New ToDo" />
+        android:onClick="onEditItem"
+        android:text="Edit ToDo" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerCategoryEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/newItemTitle"
-        android:layout_toEndOf="@+id/newItemCategory"
-        android:layout_toRightOf="@+id/newItemCategory" />
+        android:layout_below="@+id/editItemTitle"
+        android:layout_toEndOf="@+id/editItemCategory"
+        android:layout_toRightOf="@+id/editItemCategory" />
 
     <TextView
-        android:id="@+id/periodicity"
+        android:id="@+id/editItemPeriodicity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/spinner"
+        android:layout_below="@+id/spinnerCategoryEdit"
         android:hint="Periodicity"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spinnerPeriodicityEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spinner"
-        android:layout_alignStart="@+id/spinner"
-        android:layout_below="@+id/spinner" />
+        android:layout_alignLeft="@+id/spinnerCategoryEdit"
+        android:layout_alignStart="@+id/spinnerCategoryEdit"
+        android:layout_below="@+id/spinnerCategoryEdit" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/editItemDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/spinner2"
+        android:layout_below="@+id/spinnerPeriodicityEdit"
         android:hint="Date"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/chooseDate"
+        android:id="@+id/chooseDateEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spinner2"
-        android:layout_alignStart="@+id/spinner2"
-        android:layout_below="@+id/spinner2"
+        android:layout_alignLeft="@+id/spinnerPeriodicityEdit"
+        android:layout_alignStart="@+id/spinnerPeriodicityEdit"
+        android:layout_below="@+id/spinnerPeriodicityEdit"
         android:onClick="selectDate"
         android:text="Date" />
 
-    <ListView
-        android:id="@+id/listView"
+    <EditText
+        android:id="@+id/addSubTaskTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/newItemComment"
-        android:layout_toEndOf="@+id/periodicity"
-        android:layout_toRightOf="@+id/periodicity" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editItemComment"
+        android:text="Sub Task Title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/addSubTaskButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editItemComment"
+        android:layout_toEndOf="@+id/editButton"
+        android:layout_toRightOf="@+id/editButton"
+        android:onClick="onAddSubItem"
+        android:text="New Button" />
+
+    <ListView
+        android:id="@+id/editItemListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/addSubTaskButton"
+        android:clickable="true" />
 
 
 </RelativeLayout>
