@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +30,8 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<HashMap<String, Object>> items;
     private SimpleAdapter itemsAdapter;
     private ListView lvItems;
-
+    private String[] spinnerListCategory;
+    private String[] spinnerListPeriodicity;
     private int positionOnClick;
     private ListView editLvItems;
     private ArrayList<HashMap<String, Object>> subItems;
@@ -46,6 +48,8 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        spinnerListCategory = new String[]{"Course", "Travail", "Shopping", "Banque"};
+        spinnerListPeriodicity = new String[]{"par jour", "par jour ouvrable", "par semaine", "par mois", "par an"};
         displayTodoListView();
     }
 
@@ -89,6 +93,8 @@ public class MainActivity extends ActionBarActivity {
         lvItems = (ListView) findViewById(R.id.lvItems);
         items = new ArrayList<>();
         readItems();
+        periodicityUpdate();
+        writeItems();
         itemsAdapter = new SimpleAdapter(this,
                 items, R.layout.mylayout,
                 new String[]{"isDone", "title", "comment", "category", "date"},
@@ -115,7 +121,10 @@ public class MainActivity extends ActionBarActivity {
         CheckBox checkBox = (CheckBox) view;
         if (checkBox.isChecked()) {
             int pos = lvItems.getPositionForView(view);
+            HashMap<String, Object> map = items.get(pos);
+            map.put("isDone", checkBox.isChecked());
             items.remove(pos);
+            items.add(pos, map);
             // Refresh the adapter
             itemsAdapter.notifyDataSetChanged();
             writeItems();
@@ -144,6 +153,18 @@ public class MainActivity extends ActionBarActivity {
                 populateEditView(listItem);
             }
         });
+        editLvItems.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
+                        // Remove the item within array at position
+                        subItems.remove(pos);
+                        // Refresh the adapter
+                        editItemsAdapter.notifyDataSetChanged();
+                        // Return true consumes the long click event (marks it handled)
+                        return true;
+                    }
+                });
     }
 
     private void populateEditView(HashMap<String, Object> item) {
@@ -157,7 +178,8 @@ public class MainActivity extends ActionBarActivity {
         mEditDate.setText((String) item.get("date"));
         TextView mEditPeriodicity = (TextView) findViewById(R.id.editItemPeriodicity);
         mEditPeriodicity.setText((String) item.get("periodicity"));
-
+        createSpinner(spinnerListCategory, R.id.editItemCategory, R.id.spinnerCategoryEdit);
+        createSpinner(spinnerListPeriodicity, R.id.editItemPeriodicity, R.id.spinnerPeriodicityEdit);
         subItems = (ArrayList<HashMap<String, Object>>) item.get("subTaskList");
         editItemsAdapter.notifyDataSetChanged();
 
@@ -218,9 +240,8 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()){
             case R.id.menu_addItem:
                 setContentView(R.layout.layout_add_item);
-                String[] spinnerList = {"Canada", "Mexico", "USA"};
-                createSpinner(spinnerList, R.id.itemCategory, R.id.spinnerCategory);
-                createSpinner(spinnerList, R.id.itemPeriodicity, R.id.spinnerPeriodicity);
+                createSpinner(spinnerListCategory, R.id.itemCategory, R.id.spinnerCategory);
+                createSpinner(spinnerListPeriodicity, R.id.itemPeriodicity, R.id.spinnerPeriodicity);
                 return true;
             case R.id.menu_goToList:
                 displayTodoListView();
@@ -235,24 +256,91 @@ public class MainActivity extends ActionBarActivity {
         try {
             ArrayList<String> lineList = new ArrayList<>(FileUtils.readLines(todoFile));
             for (String line : lineList){
-                String[] parts = line.split("\\|");
+                String[] first_split = line.split("#");
+                String[] second_split = line.split("\\|");
+                HashMap<String, Object> subMap = new HashMap<>();
+                ArrayList<HashMap<String, Object>> list_sub_items = new ArrayList<HashMap<String, Object>>();
+                for (String sub_items : second_split) {
+                    String[] sub_parts = sub_items.split("$");
+                    subMap.put("isDone", Boolean.parseBoolean(sub_parts[0]));
+                    subMap.put("title", sub_parts[1]);
+                    list_sub_items.add(subMap);
+                }
                 HashMap<String, Object> map = new HashMap<>();
+                String[] parts = first_split[0].split("\\|");
                 map.put("isDone", Boolean.parseBoolean(parts[0]));
                 map.put("title", parts[1]);
                 map.put("comment", parts[2]);
                 map.put("category", parts[3]);
-                if (parts.length == 4) {
-                    map.put("date", "");
-                    map.put("periodicity", "");
-                } else {
-                    map.put("date", parts[4]);
-                    map.put("periodicity", parts[5]);
-                }
+                map.put("date", parts[4]);
+                map.put("periodicity", parts[5]);
+                map.put("subTaskList", list_sub_items);
                 items.add(map);
             }
         } catch (IOException e) {
             items = new ArrayList<>();
         }
+    }
+
+    private void periodicityUpdate() {
+        ArrayList<HashMap<String, Object>> updateItems = new ArrayList<>();
+        for (HashMap<String, Object> item : items) {
+            Calendar calendar_now = Calendar.getInstance();
+            Calendar calendar_set_date = Calendar.getInstance();
+            String[] dateList = ((String) item.get("date")).split("\\|");
+            int day_of_month = Integer.parseInt(dateList[0]);
+            int month = Integer.parseInt(dateList[1]);
+            int year = Integer.parseInt(dateList[2]);
+            calendar_set_date.set(year, month - 1, day_of_month);
+            if (calendar_now.after(calendar_set_date)) {
+                if (item.get("periodicity").equals("par jour")) {
+                    int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                    int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                    int year_now = calendar_now.get(Calendar.YEAR);
+                    item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                } else if (item.get("periodicity").equals("par jour ouvrable")) {
+                    int day_of_week = calendar_now.get(Calendar.DAY_OF_WEEK);
+                    if (day_of_week == 0) {
+                        calendar_now.roll(Calendar.DAY_OF_MONTH, 1);
+                        int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                        int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                        int year_now = calendar_now.get(Calendar.YEAR);
+                        item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                    } else if (day_of_week == 7) {
+                        calendar_now.roll(Calendar.DAY_OF_MONTH, 2);
+                        int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                        int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                        int year_now = calendar_now.get(Calendar.YEAR);
+                        item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                    } else {
+                        int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                        int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                        int year_now = calendar_now.get(Calendar.YEAR);
+                        item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                    }
+                } else if (item.get("periodicity").equals("par semaine")) {
+                    calendar_now.roll(Calendar.DAY_OF_MONTH, 7);
+                    int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                    int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                    int year_now = calendar_now.get(Calendar.YEAR);
+                    item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                } else if (item.get("periodicity").equals("par mois")) {
+                    calendar_now.roll(Calendar.MONTH, 1);
+                    int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                    int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                    int year_now = calendar_now.get(Calendar.YEAR);
+                    item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                } else if (item.get("periodicity").equals("par an")) {
+                    calendar_now.roll(Calendar.YEAR, 1);
+                    int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
+                    int month_now = calendar_now.get(Calendar.MONTH) + 1;
+                    int year_now = calendar_now.get(Calendar.YEAR);
+                    item.put("date", String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+                }
+            }
+            updateItems.add(item);
+        }
+        items = updateItems;
     }
 
 
@@ -262,13 +350,29 @@ public class MainActivity extends ActionBarActivity {
         try {
             List<String> lines = new ArrayList<>();
             for (HashMap<String, Object> item : items){
-                lines.add(String.format("%s|%s|%s|%s|%s|%s",
+                ArrayList<HashMap<String, Object>> sItems = (ArrayList<HashMap<String, Object>>) item.get("subTaskList");
+                String stringSubItemLine = "";
+                String stringSubItem = "";
+                for (HashMap<String, Object> sItem : sItems) {
+                    stringSubItem = String.format("%s$%s",
+                            sItem.get("isDone").toString(),
+                            sItem.get("title"));
+                    if (stringSubItem.equals("")) {
+                        stringSubItemLine = stringSubItem;
+                    } else {
+                        stringSubItemLine = String.format("%s|%s",
+                                stringSubItemLine,
+                                stringSubItem);
+                    }
+                }
+                lines.add(String.format("%s|%s|%s|%s|%s|%s#%s",
                         item.get("isDone").toString(),
                         item.get("title"),
                         item.get("comment"),
                         item.get("category"),
                         item.get("date"),
-                        item.get("periodicity")));
+                        item.get("periodicity"),
+                        stringSubItemLine));
             }
             FileUtils.writeLines(todoFile, lines);
         } catch (IOException e) {
