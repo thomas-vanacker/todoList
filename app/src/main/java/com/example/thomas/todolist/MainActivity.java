@@ -83,6 +83,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Permet de revenir à la vue principale
+     */
     private void displayTodoListView() {
         try {
             setContentView(R.layout.activity_main);
@@ -98,6 +101,13 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Permet d'instancier un spinner d'id spinnerid et de le lier à une textbox
+     *
+     * @param items
+     * @param textBoxId
+     * @param spinnerId
+     */
     private void createSpinner(final String[] items, final int textBoxId, int spinnerId) {
         AdapterView.OnItemSelectedListener onSpinner =
                 new AdapterView.OnItemSelectedListener() {
@@ -132,6 +142,9 @@ public class MainActivity extends ActionBarActivity {
         newFragment.show(getSupportFragmentManager(), "DatePicker");
     }
 
+    /**
+     * Permet l'affichage de la vue d'edit
+     */
     private void displayEditTodoListView() {
         setContentView(R.layout.edittodolayout);
         editLvItems = (ListView) findViewById(R.id.editItemListView);
@@ -141,6 +154,10 @@ public class MainActivity extends ActionBarActivity {
         setupListViewListener();
     }
 
+    /**
+     * Est appelee lors d'un click de checkbox. Permet de changer la valeur de isDone dans la Task
+     * @param view
+     */
     public void onTodoItemFinished(View view) {
         //Ceci est un commentaire
         CheckBox checkBox = (CheckBox) view;
@@ -190,6 +207,10 @@ public class MainActivity extends ActionBarActivity {
                 });
     }
 
+    /**
+     * Gere l'insertion des valeurs dans la view edit
+     * @param item
+     */
     private void populateEditView(Task item) {
         EditText mEditTitle = (EditText) findViewById(R.id.editItemTitle);
         mEditTitle.setText((String) item.getTitle());
@@ -208,6 +229,10 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Gere l'ajout de sous taches dans la vue edit
+     * @param v
+     */
     public void onAddSubItem(View v) {
         SubTask map = new SubTask();
         map.setCompleted(false);
@@ -218,6 +243,10 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Gere l'edit d'un item
+     * @param v
+     */
     public void onEditItem(View v) {
         try {
             Task item = itemsAdapter.getItem(positionOnClick);
@@ -238,6 +267,10 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Permet l'ajout d'un item
+     * @param v
+     */
     public void onAddItem(View v) {
         Task task = new Task();
         task.setCompleted(false);
@@ -261,7 +294,11 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-
+    /**
+     * Gere le clic sur l'une des options du menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -282,6 +319,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Change les dates des tasks dont la date est passée en utilisant leur periodicite
+     */
     private void periodicityUpdate() {
         ArrayList<Task> updateItems = new ArrayList<>();
         for (int taskIndex = 0; taskIndex < itemsAdapter.getCount(); taskIndex++) {
