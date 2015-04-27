@@ -37,7 +37,13 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<SubTask> subItems;
     private SubTaskAdapter editItemsAdapter;
 
-
+    /**
+     * Permet de recuperer la date du dialogue et de la mettre dans la vue
+     *
+     * @param year
+     * @param month
+     * @param day
+     */
     public void populateSetDate(int year, int month, int day) {
         mEdit = (TextView) findViewById(R.id.itemDate);
         mEdit.setText(String.format("%02d/%02d/%04d", day, month, year));

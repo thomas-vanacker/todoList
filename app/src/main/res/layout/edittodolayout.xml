@@ -31,9 +31,11 @@
         android:id="@+id/editItemComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/spinnerPeriodicityEdit"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/chooseDateEdit"
+        android:layout_alignRight="@+id/spinnerPeriodicityEdit"
+        android:layout_below="@+id/editItemDate"
         android:hint="Comment" />
 
     <Button
@@ -76,22 +78,14 @@
         android:id="@+id/editItemDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editItemPeriodicity"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/editItemPeriodicity"
         android:layout_below="@+id/spinnerPeriodicityEdit"
         android:hint="Date"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Button
-        android:id="@+id/chooseDateEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spinnerPeriodicityEdit"
-        android:layout_alignStart="@+id/spinnerPeriodicityEdit"
-        android:layout_below="@+id/spinnerPeriodicityEdit"
-        android:onClick="selectDate"
-        android:text="Date" />
 
     <EditText
         android:id="@+id/addSubTaskTitle"
