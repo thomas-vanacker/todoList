@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/chooseDate"
+        android:layout_below="@+id/latitude"
         android:hint="Comment" />
 
     <Button
@@ -92,6 +92,38 @@
         android:layout_below="@+id/spinnerPeriodicity"
         android:onClick="selectDate"
         android:text="Date" />
+
+    <EditText
+        android:id="@+id/longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chooseDate"
+        android:hint="Longitude"
+        android:inputType="number|numberDecimal"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/longitude"
+        android:hint="Latitude"
+        android:inputType="number|numberDecimal"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/buttonLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/itemComment"
+        android:layout_alignLeft="@+id/chooseDate"
+        android:layout_alignStart="@+id/chooseDate"
+        android:onClick="onSeeLocation"
+        android:text="See location" />
 
 
 </RelativeLayout>

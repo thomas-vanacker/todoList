@@ -1,5 +1,6 @@
 package com.example.thomas.todolist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -267,6 +268,10 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void onSeeLocation(View view) {
+        startActivity(new Intent(this, Map.class));
+    }
+
     /**
      * Permet l'ajout d'un item
      * @param v
@@ -279,6 +284,8 @@ public class MainActivity extends ActionBarActivity {
         task.setCategory(((EditText) findViewById(R.id.itemCategory)).getText().toString());
         task.setDate(((TextView) findViewById(R.id.itemDate)).getText().toString());
         task.setPeriodicity(((TextView) findViewById(R.id.itemPeriodicity)).getText().toString());
+        task.setLongitude(Double.parseDouble(((TextView) findViewById(R.id.longitude)).getText().toString()));
+        task.setLatitude(Double.parseDouble(((TextView) findViewById(R.id.latitude)).getText().toString()));
         task.setSubTaskList(new ArrayList<SubTask>());
         task.saveEventually();
         itemsAdapter.insert(task, 0);

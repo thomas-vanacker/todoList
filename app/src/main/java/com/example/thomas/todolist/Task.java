@@ -51,15 +51,31 @@ public class Task extends ParseObject {
         return getString("date");
     }
 
-    public void setDate(String date) {
-        put("date", date);
-    }
-
     public void setDate(Calendar calendar_now) {
         int day_of_month_now = calendar_now.get(Calendar.DAY_OF_MONTH);
         int month_now = calendar_now.get(Calendar.MONTH) + 1;
         int year_now = calendar_now.get(Calendar.YEAR);
         setDate(String.format("%02d/%02d/%04d", day_of_month_now, month_now, year_now));
+    }
+
+    public void setDate(String date) {
+        put("date", date);
+    }
+
+    public Double getLongitude() {
+        return getDouble("longitude");
+    }
+
+    public void setLongitude(Double longitude) {
+        put("longitude", longitude);
+    }
+
+    public Double getLatitude() {
+        return getDouble("latitude");
+    }
+
+    public void setLatitude(Double latitude) {
+        put("latitude", latitude);
     }
 
     public String getPeriodicity() {

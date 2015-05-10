@@ -39,6 +39,10 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         categoryView.setText(task.getCategory());
         TextView dateView = (TextView) convertView.findViewById(R.id.deadline);
         dateView.setText(task.getDate());
+        TextView longView = (TextView) convertView.findViewById(R.id.longitude);
+        longView.setText(task.getLongitude().toString());
+        TextView latView = (TextView) convertView.findViewById(R.id.latitude);
+        latView.setText(task.getLatitude().toString());
         return convertView;
     }
 }
