@@ -1,6 +1,7 @@
 package com.example.thomas.todolist;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,8 +31,10 @@ public class Map extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        location = new LatLng(Double.parseDouble(((TextView) findViewById(R.id.longitude)).getText().toString()),
-                Double.parseDouble(((TextView) findViewById(R.id.latitude)).getText().toString()));
+        Intent mapIntent = getIntent();
+        double longitude = mapIntent.getDoubleExtra("longitude", 0.0);
+        double latitude = mapIntent.getDoubleExtra("latitude", 0.0);
+        location = new LatLng(longitude, latitude);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
         setContentView(R.layout.map_fragment);

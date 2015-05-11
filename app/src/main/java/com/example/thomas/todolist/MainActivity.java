@@ -214,15 +214,15 @@ public class MainActivity extends ActionBarActivity {
      */
     private void populateEditView(Task item) {
         EditText mEditTitle = (EditText) findViewById(R.id.editItemTitle);
-        mEditTitle.setText((String) item.getTitle());
+        mEditTitle.setText(item.getTitle());
         EditText mEditCategory = (EditText) findViewById(R.id.editItemCategory);
-        mEditCategory.setText((String) item.getCategory());
+        mEditCategory.setText(item.getCategory());
         EditText mEditComment = (EditText) findViewById(R.id.editItemComment);
-        mEditComment.setText((String) item.getComment());
+        mEditComment.setText(item.getComment());
         TextView mEditDate = (TextView) findViewById(R.id.editItemDate);
-        mEditDate.setText((String) item.getDate());
+        mEditDate.setText(item.getDate());
         TextView mEditPeriodicity = (TextView) findViewById(R.id.editItemPeriodicity);
-        mEditPeriodicity.setText((String) item.getPeriodicity());
+        mEditPeriodicity.setText(item.getPeriodicity());
         createSpinner(spinnerListCategory, R.id.editItemCategory, R.id.spinnerCategoryEdit);
         createSpinner(spinnerListPeriodicity, R.id.editItemPeriodicity, R.id.spinnerPeriodicityEdit);
         editItemsAdapter.notifyDataSetChanged();
@@ -269,7 +269,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onSeeLocation(View view) {
-        startActivity(new Intent(this, Map.class));
+        Intent mapIntent = new Intent(this, Map.class);
+        View latitudeControl = findViewById(R.id.longitude);
+        View longitudeControl = findViewById(R.id.latitude);
+        double longitude = Double.parseDouble(((TextView) latitudeControl).getText().toString());
+        double latitude = Double.parseDouble(((TextView) longitudeControl).getText().toString());
+        mapIntent.putExtra("latitude", longitude);
+        mapIntent.putExtra("longitude", latitude);
+        startActivity(mapIntent);
     }
 
     /**
@@ -335,7 +342,7 @@ public class MainActivity extends ActionBarActivity {
             Task item = itemsAdapter.getItem(taskIndex);
             Calendar calendar_now = Calendar.getInstance();
             Calendar calendar_set_date = Calendar.getInstance();
-            String[] dateList = ((String) item.getDate()).split("\\|");
+            String[] dateList = item.getDate().split("\\|");
             int day_of_month = Integer.parseInt(dateList[0]);
             int month = Integer.parseInt(dateList[1]);
             int year = Integer.parseInt(dateList[2]);
